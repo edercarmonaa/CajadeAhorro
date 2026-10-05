@@ -1,6 +1,6 @@
 # Caja de Ahorro
 
-Sistema web para administrar una caja de ahorro interna: empleados, aportaciones, prestamos, abonos, movimientos de entrada/salida, cortes semanales, devoluciones y reportes financieros en Excel y PDF.
+Sistema web para administrar una caja de ahorro interna: empleados, aportaciones, prestamos, abonos, movimientos de entrada/salida, cortes semanales, devoluciones y reportes financieros en Excel y PDF (2016).
 
 ## El problema
 
