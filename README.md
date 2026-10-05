@@ -149,7 +149,17 @@ En un entorno con Apache/Nginx, apunta el document root al directorio del proyec
 
 ## Capturas
 
-El proyecto incluye imagenes para la interfaz y reportes en `images/`, pero no contiene capturas de pantalla documentales. Pueden agregarse posteriormente en una carpeta dedicada, por ejemplo `docs/screenshots/`.
+### Formulario de Empleados 
+
+![Dashboard](screenshots/agregarEmpleados.png)
+
+### Fromulario de Ejercicio
+
+![Calendario](screenshot/crearEjercicio.png)
+
+### Ejercicios
+
+![App Android](screenshot/ejercicios.png)
 
 ## Seguridad
 
