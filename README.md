@@ -151,15 +151,15 @@ En un entorno con Apache/Nginx, apunta el document root al directorio del proyec
 
 ### Formulario de Empleados 
 
-![Dashboard](screenshots/agregarEmpleados.png)
+![Empleados](screenshots/agregarEmpleados.png)
 
 ### Fromulario de Ejercicio
 
-![Calendario](screenshot/crearEjercicio.png)
+![Ejercicio](screenshots/crearEjercicio.png)
 
 ### Ejercicios
 
-![App Android](screenshot/ejercicios.png)
+![Ejercicicios](screenshots/ejercicios.png)
 
 ## Seguridad
 
