@@ -1,0 +1,40 @@
+<?php
+require_once("libs/PHPExcel/IOFactory.php");
+require_once('libs/PHPExcel/Writer/Excel2007.php'); 
+include_once 'config/database.php'; 
+$database = new Database(); 
+$db = $database->Coneccion();
+ 
+include_once 'objects/ahorro.php';
+$ahorro = new Ahorro($db);
+$stmt = $ahorro->leeAhorros();
+$num = $stmt->rowCount();
+$data="";
+ 
+
+$data = json_decode(file_get_contents("php://input")); 
+$objPHPExcel = new PHPExcel();
+$objPHPExcel->setActiveSheetIndex(0);
+$objPHPExcel->getActiveSheet()->SetCellValue('A1', 'No de Empleado');
+$objPHPExcel->getActiveSheet()->SetCellValue('B1', 'Nombre');
+$objPHPExcel->getActiveSheet()->SetCellValue('C1', 'Monto Ahorrado');
+if($num>0){
+    $x=2;
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
+        extract($row);
+        $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, $x, $id_empleado);
+        $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(1, $x, $nombre);
+        $objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(2, $x, $monto);
+        $x++;
+    }
+} 
+$objPHPExcel->getActiveSheet()->setTitle('Ahorros');
+$objPHPExcel->setActiveSheetIndex(0);
+
+header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+header('Content-Disposition: attachment;filename="Ahorros.xlsx"');
+header('Cache-Control: max-age=0');
+header('Cache-Control: max-age=1');
+$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
+$objWriter->save('php://output');
+?>

@@ -1,0 +1,69 @@
+# Environment and local configuration
+.env
+.env.*
+!.env.example
+
+# Dependency directories
+node_modules/
+vendor/
+venv/
+.venv/
+
+# Runtime, cache and reports
+logs/
+*.log
+cache/
+tmp/
+temp/
+coverage/
+
+# Generated application output
+dist/
+build/
+archivos/
+
+# Local databases and dumps
+*.sqlite
+*.sqlite3
+*.db
+SQL/
+*.sql
+!database/
+!database/schema.sql
+!database/seed.sql
+*.dump
+
+# Backups and local copies
+*.bak
+*.BAK
+*.backup
+*.old
+*.copy
+
+# Secrets and credentials
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
+libs/tcpdf/examples/data/cert/
+credentials.json
+service-account.json
+firebase-adminsdk*.json
+google-services.json
+auth.json
+secrets.json
+secrets.yml
+
+# Downloaded archives and executables
+*.zip
+*.rar
+*.7z
+*.exe
+
+# Editor and OS metadata
+.DS_Store
+Thumbs.db
+.project
+.idea/
+.vscode/

@@ -1,0 +1,124 @@
+<?php
+header("Access-Control-Allow-Origin: *");
+header("Content-Type: application/json; charset=UTF-8");
+
+include_once 'config/database.php';
+include_once 'objects/prestamo.php';
+include_once 'objects/abono.php';
+include_once 'objects/ahorro.php';
+include_once 'objects/empleado.php';
+include_once 'objects/ejercicio.php';
+include_once 'objects/ent_sal.php';
+include_once 'objects/semana.php';
+include_once 'objects/abono_efec.php';
+
+$database = new Database();
+$db = $database->Coneccion();
+$prestamo = new Prestamo($db);
+$ahorro = new Ahorro($db);
+$abono = new Abono($db);
+$empleado = new Empleado($db);
+$ejercicio = new ejercicio($db);
+$ent_sal= new Ent_sal($db);
+$semana_info = new Semana($db);
+$abono_efec= new AbonoEfectivo($db);
+$datos="";
+$data = json_decode(file_get_contents("php://input"));
+//$stmt = $prestamo->resumenPrestamosSemana($data->semana);
+
+
+//OBTIENE DATOS DEL EJERCICIO
+$nom_ejercicio = $ejercicio->EjercicioActivo();
+$semana=0;
+if (isset($_GET["semana"])) {
+    $semana=$_GET["semana"];
+}
+
+//OBTIENE EL SALDO INICIAL DE LA SEMANA
+$semana_info->no_semana=$data->semana;
+$stmt = $semana_info->leeSemana();
+$num = $stmt->rowCount();
+$saldo_ini=0;
+if($num>0){
+    $x=1;
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
+        extract($row);
+            $saldo_ini+=$saldo_inicial;
+       }
+}
+
+
+//OBTIENE DATOS DEL AHORRO
+$stmt = $ahorro->leeAhorrosSemana($data->semana);
+$num = $stmt->rowCount();
+$data_ahorro="";
+if($num>0){
+    $x=1;
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
+        extract($row);
+            $data_ahorro+=$monto;
+        }
+}
+
+//OBTIENE DATOS DE LOS ABONOS
+$stmt = $abono->leeAbonosSemana($data->semana);
+$num = $stmt->rowCount();
+$data_abono="";
+if($num>0){
+    $x=1;
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
+        extract($row);
+         $data_abono+=$monto;
+    }
+}
+
+
+//OBTIENE DATOS DE LOS PRESTAMOS
+$stmt = $prestamo->leePrestamosSemana($data->semana);
+$num = $stmt->rowCount();
+$data_prestamo="";
+if($num>0){
+    $x=1;
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
+        extract($row);
+        $data_prestamo+=$monto;
+    }
+}
+
+//OBTIENE DATOS DE LOS ABONOS EFECT
+$stmt = $abono_efec->leeAbonosSemana($data->semana);
+$num = $stmt->rowCount();
+$data_abono_efec=0;
+if($num>0){
+    $x=1;
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
+        extract($row);
+         $data_abono_efec+=$monto;
+    }
+}
+
+//OBTIENE DATOS DE LOS MOVIMIENTOS
+$stmt = $ent_sal->leeMovimientosSemana($data->semana);
+$num = $stmt->rowCount();
+$data_movimientos="";
+if($num>0){
+    $x=1;
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
+        extract($row);
+        $data_movimientos=array(
+                "entradas" => $entradas,
+                "salidas" => $salidas,
+                "abonos_teso" => $abonos_teso,
+                "ahorro_teso" => $ahorro_teso,
+                "gastos" => $gastos,
+
+        );
+    }
+}
+$efectivo_caja=$saldo_ini+$data_ahorro+$data_abono+$data_movimientos['entradas']+$data_abono_efec-$data_prestamo-$data_movimientos['gastos']-$data_movimientos['salidas'];
+
+$datos .= '{';
+$datos .= '"efectivo_caja":"'  . $efectivo_caja . '"}';
+
+echo '{"records":[' . $datos . ']}';
+?>
